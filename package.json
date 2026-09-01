@@ -9,7 +9,7 @@
     "type": "git",
     "url": "https://github.com/panagot/ZCASH-INVOICE-preflight.git"
   },
-  "homepage": "https://github.com/panagot/ZCASH-INVOICE-preflight#readme",
+  "homepage": "https://zcash-invoice-preflight.vercel.app/",
   "bugs": {
     "url": "https://github.com/panagot/ZCASH-INVOICE-preflight/issues"
   },
