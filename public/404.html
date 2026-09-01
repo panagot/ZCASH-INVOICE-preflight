@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Not found · ZEC Invoice Preflight</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta, mountDocHero } from "/lib/site-chrome.js"
+      mountPageMeta({ title: "Not found · ZEC Invoice Preflight", description: "Page not found.", path: "/404.html" })
+      mountSiteChrome({ page: "", showBanner: false })
+      mountDocHero()
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <div id="doc-hero"></div>
+    <main id="main-content" class="doc-page">
+      <p class="doc-kicker">404</p>
+      <h1>Ticket not found</h1>
+      <p class="doc-lead">This path does not exist. Return to the merchant desk or reviewer guide.</p>
+      <p class="doc-actions">
+        <a class="btn cut" href="/">Merchant desk</a>
+        <a class="btn ghost" href="/reviewers.html">Reviewers</a>
+      </p>
+      <nav class="error404-grid" aria-label="Quick links">
+        <a href="/why.html">Why preflight</a>
+        <a href="/how.html">How it works</a>
+        <a href="/checks.html">Check reference</a>
+        <a href="/integration.html">BTCPay handoff</a>
+        <a href="/pay.html">Customer pay</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </main>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

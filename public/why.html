@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Why Zcash invoice preflight exists — catch invalid payment requests before customers scan a QR or send funds."
+    />
+    <title>Why · ZEC Invoice Preflight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta, mountDocPager, mountDocHero } from "/lib/site-chrome.js"
+      import { mountDocViz } from "/lib/doc-viz.js"
+      mountPageMeta({
+        title: "Why preflight · ZEC Invoice Preflight",
+        description: "Why Zcash invoice preflight exists — catch invalid payment requests before customers scan a QR or send funds.",
+        path: "/why.html",
+      })
+      mountSiteChrome({ page: "why", showBanner: false })
+      mountDocHero()
+      mountDocViz("why")
+      mountDocPager("why")
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <div id="doc-hero"></div>
+
+    <main id="main-content" class="doc-page">
+      <p class="doc-kicker">Problem statement</p>
+      <h1>Why preflight exists</h1>
+      <p class="doc-lead">
+        Merchants accepting ZEC can assemble <strong>invalid <code>zcash:</code> payment URIs</strong> at invoice time.
+        Wallets may reject them, drop memos, or leave amounts ambiguous — after the customer already has a QR in hand.
+      </p>
+
+      <div id="doc-viz"></div>
+
+      <section class="doc-section">
+        <h2>Real failure modes</h2>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Mistake</th>
+                <th>What goes wrong</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Memo on a <strong>transparent</strong> address</td>
+                <td>Invalid ZIP-321; memo silently dropped or payment rejected</td>
+              </tr>
+              <tr>
+                <td>Mainnet address on a testnet desk</td>
+                <td>Wrong network → confusion, lost test funds, support tickets</td>
+              </tr>
+              <tr>
+                <td>Missing or malformed amount</td>
+                <td>Broken QR; customer must guess how much to send</td>
+              </tr>
+              <tr>
+                <td>Memo longer than 512 bytes</td>
+                <td>Encode failure or wallet rejection at pay time</td>
+              </tr>
+              <tr>
+                <td>Multi-payment URI (<code>address.1</code>)</td>
+                <td>Out of scope for single-checkout tools; easy to mishandle</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="doc-section">
+        <h2>Compose-time vs pay-time</h2>
+        <p>
+          BTCPay and wallet software may catch some errors when a payment is attempted. This tool runs the same class of
+          checks <strong>while the merchant is still composing</strong> the request — before anything is shared, printed, or
+          pasted into a POS flow.
+        </p>
+        <ul class="doc-list">
+          <li><strong>Earlier</strong> — staff see PASS / FAIL on a ticket, not a confused customer at the counter.</li>
+          <li><strong>Structured</strong> — every result has a stable <code>code</code> a BTCPay plugin can mirror.</li>
+          <li><strong>Honest</strong> — mock payment status is labeled; we do not pretend to watch the chain.</li>
+        </ul>
+        <div class="doc-flow" aria-label="Compose vs pay timing">
+          <div class="doc-flow-step"><strong>Compose</strong><span>Merchant builds URI · preflight runs here</span></div>
+          <div class="doc-flow-step"><strong>Share</strong><span>QR / link reaches customer</span></div>
+          <div class="doc-flow-step"><strong>Pay</strong><span>Wallet parses request</span></div>
+          <div class="doc-flow-step"><strong>Settle</strong><span>BTCPay plugin detects on-chain</span></div>
+        </div>
+      </section>
+
+      <section class="doc-section doc-callout">
+        <h2>What we are not solving</h2>
+        <p>
+          This is not a lightwalletd health dashboard, not live payment detection, and not a BTCPay plugin rewrite. It is
+          invoice hygiene — the narrow gap between “I typed an address” and “the customer scanned a valid request.”
+        </p>
+        <p class="doc-actions">
+          <a class="btn cut" href="/">Open merchant desk</a>
+          <a class="btn ghost" href="/how.html">How it works</a>
+        </p>
+      </section>
+    </main>
+
+    <div id="doc-pager" class="doc-pager"></div>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

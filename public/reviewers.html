@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="10-minute reviewer path for ZEC Invoice Preflight — engine check, PASS/FAIL samples, handoff export, mock status lane."
+    />
+    <title>Reviewers · ZEC Invoice Preflight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta, mountDocHero, mountDocPager } from "/lib/site-chrome.js"
+      import { mountDocViz } from "/lib/doc-viz.js"
+      mountPageMeta({
+        title: "Reviewers · ZEC Invoice Preflight",
+        description: "10-minute path: Good UA → Bad t+memo → Handoff JSON → mock status lane.",
+        path: "/reviewers.html",
+      })
+      mountSiteChrome({ page: "reviewers", showBanner: true })
+      mountDocHero()
+      mountDocViz("reviewers")
+      mountDocPager("reviewers")
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <div id="doc-hero"></div>
+    <main id="main-content" class="doc-page">
+      <p class="doc-kicker">ZCG / maintainer path</p>
+      <h1>10-minute reviewer path</h1>
+      <p class="doc-lead">
+        Browser-only checks on the live desk. CLI and clone path:
+        <a href="https://github.com/panagot/ZCASH-INVOICE-preflight/blob/main/docs/REVIEWER.md" target="_blank" rel="noopener noreferrer">REVIEWER.md on GitHub</a>.
+        Live demo:
+        <a href="https://zcash-invoice-preflight.vercel.app/">zcash-invoice-preflight.vercel.app</a>.
+      </p>
+
+      <div id="doc-viz"></div>
+
+      <section class="doc-section">
+        <h2>What this is</h2>
+        <p>
+          Compose-time ZIP-321 preflight for Zcash invoices — a <strong>BTCPay companion</strong>, not a plugin rewrite,
+          not live chain detection, not an indexer observatory.
+        </p>
+      </section>
+
+      <ol class="doc-steps">
+        <li>
+          <h2>Confirm engine + detection</h2>
+          <p>
+            On the desk mast: <strong>Address engine · zaddr-wasm</strong> and
+            <strong>Detection · mock · chainWatch=false</strong>.
+          </p>
+        </li>
+        <li>
+          <h2>Good UA → PASS</h2>
+          <p>Click <strong>Good UA</strong> → green PASS ticket, QR, and valid <code>zcash:</code> URI.</p>
+        </li>
+        <li>
+          <h2>Bad t+memo → FAIL</h2>
+          <p>Click <strong>Bad t+memo</strong> → red FAIL with <code>memo</code> check (transparent + memo is invalid ZIP-321).</p>
+        </li>
+        <li>
+          <h2>Export BTCPay handoff</h2>
+          <p>
+            On a PASS ticket, click <strong>Export BTCPay handoff</strong> → JSON with
+            <code>schema: btcpay-zec-helper.handoff/v1</code>, <code>source.chainWatch: false</code>, and
+            <code>ownership</code> fields. npm package: <code>zcash-invoice-preflight</code>.
+          </p>
+        </li>
+        <li>
+          <h2>Advance (mock)</h2>
+          <p>
+            Click <strong>Advance (mock)</strong> — status lane stays labeled <strong>MOCK — NOT CHAIN</strong>. This does
+            not detect on-chain payment.
+          </p>
+        </li>
+        <li>
+          <h2>Session telemetry</h2>
+          <p>
+            After a few runs, scroll to <strong>Session telemetry</strong> on the desk — pass rate, fail-code bars, and a
+            recent trend sparkline from the local roll (not chain data).
+          </p>
+        </li>
+      </ol>
+
+      <section class="doc-section doc-callout">
+        <h2>Acceptance questions (LOI)</h2>
+        <ul class="doc-list">
+          <li>Is compose-time preflight + handoff JSON useful as a BTCPay companion?</li>
+          <li>Which fail codes does your stack already enforce at invoice create?</li>
+          <li>Which handoff fields should the plugin mirror?</li>
+        </ul>
+      </section>
+
+      <section class="doc-section">
+        <h2>CLI path (optional)</h2>
+        <pre class="doc-code"><code>git clone https://github.com/panagot/ZCASH-INVOICE-preflight.git
+cd ZCASH-INVOICE-preflight
+npm ci && npm test
+node bin/doctor.js --file fixtures/good-ua.json
+node bin/doctor.js --file fixtures/bad-transparent-memo.json</code></pre>
+      </section>
+
+      <p class="doc-actions">
+        <a class="btn cut" href="/">Open merchant desk</a>
+        <a class="btn ghost" href="/checks.html">Check reference</a>
+      </p>
+    </main>
+    <div id="doc-pager" class="doc-pager"></div>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

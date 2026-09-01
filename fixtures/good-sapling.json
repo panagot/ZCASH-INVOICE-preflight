@@ -1,0 +1,8 @@
+{
+  "id": "fix-good-sapling",
+  "network": "mainnet",
+  "address": "zs1jap4fpzz4wj0uh7zavxsju6xrqud6gdkelx4gng8h0t30qv5huz6ar4hpvsxr6tdvza9zasweve",
+  "amount": "1.5",
+  "memo": "sapling-ok",
+  "label": "Sapling till"
+}

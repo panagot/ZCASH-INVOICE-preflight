@@ -1,0 +1,7 @@
+{
+  "id": "fix-bad-transparent-memo",
+  "network": "mainnet",
+  "address": "t1XUKmDLFcRDxvf9A7tawmgePDN8NK6os35",
+  "amount": "0.01",
+  "memo": "should-not-be-allowed"
+}

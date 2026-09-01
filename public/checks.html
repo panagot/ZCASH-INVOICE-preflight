@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Preflight check reference for ZEC Invoice Preflight — stable codes for BTCPay mirroring." />
+    <title>Checks · ZEC Invoice Preflight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta, mountDocPager, mountDocHero } from "/lib/site-chrome.js"
+      import { mountDocViz } from "/lib/doc-viz.js"
+      mountPageMeta({
+        title: "Checks · ZEC Invoice Preflight",
+        description: "Preflight check reference — stable codes for BTCPay plugin mirroring.",
+        path: "/checks.html",
+      })
+      mountSiteChrome({ page: "checks", showBanner: false })
+      mountDocHero()
+      mountDocViz("checks")
+      mountDocPager("checks")
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <div id="doc-hero"></div>
+
+    <main id="main-content" class="doc-page">
+      <p class="doc-kicker">Reference</p>
+      <h1>Preflight checks</h1>
+      <p class="doc-lead">
+        Each check exposes a stable <code>code</code>, a severity <code>level</code> (<code>ok</code> ·
+        <code>warn</code> · <code>bad</code>), and a human message. PASS when no check is <code>bad</code>.
+      </p>
+
+      <div id="doc-viz"></div>
+
+      <div class="fixture-chips" aria-label="Load samples on merchant desk">
+        <a class="fixture-chip pass" href="/?sample=good">Good UA · desk</a>
+        <a class="fixture-chip fail" href="/?sample=bad">Bad t+memo · desk</a>
+        <a class="fixture-chip" href="/reviewers.html">Reviewer path</a>
+      </div>
+
+      <div class="doc-table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Level when bad</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>engine</code></td>
+              <td>warn</td>
+              <td>Reports whether the WASM address parser loaded; heuristic fallback is less strict</td>
+            </tr>
+            <tr>
+              <td><code>address</code></td>
+              <td>bad / warn</td>
+              <td>Valid Zcash address; type (unified / sapling / transparent)</td>
+            </tr>
+            <tr>
+              <td><code>network</code></td>
+              <td>bad</td>
+              <td>Address network matches desk mainnet / testnet setting</td>
+            </tr>
+            <tr>
+              <td><code>amount</code></td>
+              <td>bad</td>
+              <td>Positive ZEC amount, ≤ 8 decimal places</td>
+            </tr>
+            <tr>
+              <td><code>memo</code></td>
+              <td>bad</td>
+              <td>Memo allowed on address type; ≤ 512 UTF-8 bytes</td>
+            </tr>
+            <tr>
+              <td><code>privacy</code></td>
+              <td>warn</td>
+              <td>Transparent receive — amount and linkability are public</td>
+            </tr>
+            <tr>
+              <td><code>uri</code> · <code>uri_roundtrip</code> · <code>uri_amount</code></td>
+              <td>bad</td>
+              <td>ZIP-321 encode / decode integrity; amount round-trip</td>
+            </tr>
+            <tr>
+              <td><code>parse</code></td>
+              <td>bad</td>
+              <td>Pasted URI failed to parse under supported subset</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <section class="doc-section">
+        <h2>Fixture scenarios</h2>
+        <p>Reproducible JSON fixtures in the repo — run with the CLI doctor or load samples on the desk.</p>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Fixture</th>
+                <th>Expected</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>good-ua.json</code></td>
+                <td class="pass-cell">PASS — unified + memo</td>
+              </tr>
+              <tr>
+                <td><code>good-sapling.json</code></td>
+                <td class="pass-cell">PASS — Sapling address</td>
+              </tr>
+              <tr>
+                <td><code>label-message.json</code></td>
+                <td class="pass-cell">PASS — label + message encoding</td>
+              </tr>
+              <tr>
+                <td><code>bad-transparent-memo.json</code></td>
+                <td class="fail-cell">FAIL — memo on t-addr</td>
+              </tr>
+              <tr>
+                <td><code>bad-network-mismatch.json</code></td>
+                <td class="fail-cell">FAIL — network mismatch</td>
+              </tr>
+              <tr>
+                <td><code>bad-empty-amount.json</code></td>
+                <td class="fail-cell">FAIL — missing amount</td>
+              </tr>
+              <tr>
+                <td><code>bad-huge-memo.json</code></td>
+                <td class="fail-cell">FAIL — memo &gt; 512 bytes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="doc-actions">
+        <a class="btn cut" href="/">Run checks on desk</a>
+        <a class="btn ghost" href="/integration.html">BTCPay handoff</a>
+      </p>
+    </main>
+
+    <div id="doc-pager" class="doc-pager"></div>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="How ZEC Invoice Preflight works — build, validate, share, and hand off Zcash payment requests."
+    />
+    <title>How it works · ZEC Invoice Preflight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta, mountDocPager, mountDocHero } from "/lib/site-chrome.js"
+      import { mountDocViz } from "/lib/doc-viz.js"
+      mountPageMeta({
+        title: "How it works · ZEC Invoice Preflight",
+        description: "How ZEC Invoice Preflight works — build, validate, share, and hand off Zcash payment requests.",
+        path: "/how.html",
+      })
+      mountSiteChrome({ page: "how", showBanner: false })
+      mountDocHero()
+      mountDocViz("how")
+      mountDocPager("how")
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <div id="doc-hero"></div>
+
+    <main id="main-content" class="doc-page">
+      <p class="doc-kicker">Workflow</p>
+      <h1>How it works</h1>
+      <p class="doc-lead">
+        A merchant-facing desk that encodes ZIP-321, validates addresses with maintained libraries, prints a thermal-style
+        ticket, and exports data a BTCPay companion can ingest.
+      </p>
+
+      <div id="doc-viz"></div>
+
+      <ol class="doc-steps">
+        <li>
+          <h2>Compose or parse</h2>
+          <p>
+            Enter receive address, amount, memo, label, and message — or paste an existing <code>zcash:</code> URI. The
+            desk supports unified, Sapling, and transparent addresses with explicit network selection.
+          </p>
+        </li>
+        <li>
+          <h2>Run preflight</h2>
+          <p>
+            Structured checks produce a PASS or FAIL ticket with a checklist. Warnings (e.g. transparent receive, no memo)
+            do not fail preflight; hard errors (memo on t-addr, network mismatch) do.
+          </p>
+        </li>
+        <li>
+          <h2>Share with customer</h2>
+          <p>
+            On PASS, copy the URI, open the customer pay page with QR, or print the ticket. The pay page is a read-only
+            view of the same validated payload.
+          </p>
+        </li>
+        <li>
+          <h2>Export for BTCPay</h2>
+          <p>
+            Download handoff JSON matching <code>handoff-v1</code> schema: preflight checks, payment URI, invoice fields,
+            and explicit ownership disclaimer (compose-time vs settlement).
+          </p>
+        </li>
+        <li>
+          <h2>Status lane (mock)</h2>
+          <p>
+            Advance unpaid → detected → confirmed locally to demo a merchant workflow. This lane is
+            <strong>MOCK — NOT CHAIN</strong>. Real detection belongs in BTCPay / zkool integration.
+          </p>
+        </li>
+      </ol>
+
+      <section class="doc-section">
+        <h2>Under the hood</h2>
+        <div class="doc-cards">
+          <article class="doc-card">
+            <h3>Address engine</h3>
+            <p>
+              Primary path: <code>@elemental-zcash/zaddr_wasm_parser</code> (Rust zcash_address → WASM). Heuristic fallback
+              if WASM fails — always shown on the ticket.
+            </p>
+          </article>
+          <article class="doc-card">
+            <h3>ZIP-321 subset</h3>
+            <p>Single-payment URIs only. Multi-pay query keys are rejected loudly. Memo encoding respects shielded rules.</p>
+          </article>
+          <article class="doc-card">
+            <h3>CLI doctor</h3>
+            <p>
+              Same checks headless: <code>node bin/doctor.js --file fixtures/good-ua.json</code> exits 0 on pass, 1 on fail.
+              Used in CI and merchant scripts.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="doc-section doc-callout">
+        <h2>10-minute reviewer path</h2>
+        <p>
+          Follow the four-step path on the merchant desk (sample buttons + handoff export), then use the
+          <a href="https://github.com/panagot/ZCASH-INVOICE-preflight/blob/main/docs/REVIEWER.md" target="_blank" rel="noopener noreferrer">reviewer guide</a>
+          on GitHub.
+        </p>
+        <p class="doc-actions">
+          <a class="btn cut" href="/">Try on the desk</a>
+          <a class="btn ghost" href="/checks.html">Check reference</a>
+        </p>
+      </section>
+    </main>
+
+    <div id="doc-pager" class="doc-pager"></div>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

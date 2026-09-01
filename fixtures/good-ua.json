@@ -1,0 +1,10 @@
+{
+  "id": "fix-good-ua",
+  "network": "mainnet",
+  "orderId": "fixture-001",
+  "address": "u1mq04mn6p50lvt0p4wdslweg8tffm3d0vn6tnyz4ry7dgrh35tw2ykzf7luh77qgsgl8wcl0a2fylvk3en5csd9nrhwdzvf8tdey9vfmuk98vj6de8msslwrh4rs06q8upcnsj5pqzq7vcestnlr08gjycj72z0pdpg02y2c2a2mcutardqpflq4p00udr7tktmyp99crfcfg6e2s30d",
+  "amount": "0.042",
+  "memo": "Order #1042",
+  "label": "Demo Cafe",
+  "message": "Table 4"
+}

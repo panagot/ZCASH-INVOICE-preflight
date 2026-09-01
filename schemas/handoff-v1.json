@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://btcpay-zec-helper.local/schemas/handoff-v1.json",
+  "title": "btcpay-zec-helper BTCPay handoff v1",
+  "type": "object",
+  "required": ["schema", "generatedAt", "disclaimer", "invoice", "preflight", "ownership"],
+  "properties": {
+    "schema": { "const": "btcpay-zec-helper.handoff/v1" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "disclaimer": { "type": "string" },
+    "ownership": {
+      "type": "object",
+      "required": ["composeTimePreflight", "settlementAndDetection"],
+      "properties": {
+        "composeTimePreflight": { "type": "string" },
+        "settlementAndDetection": { "type": "string" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "tool": { "type": "string" },
+        "prototype": { "type": "boolean" },
+        "chainWatch": { "type": "boolean" }
+      }
+    },
+    "invoice": {
+      "type": "object",
+      "required": ["helperId", "network", "currency", "address", "statusLocal"],
+      "properties": {
+        "helperId": { "type": "string" },
+        "btcpayInvoiceId": { "type": ["string", "null"] },
+        "orderId": { "type": ["string", "null"] },
+        "createdAt": { "type": "string" },
+        "network": { "enum": ["mainnet", "testnet"] },
+        "currency": { "const": "ZEC" },
+        "amount": { "type": ["string", "null"] },
+        "fiatNote": { "type": ["string", "null"] },
+        "address": { "type": "string" },
+        "memo": { "type": ["string", "null"] },
+        "label": { "type": ["string", "null"] },
+        "message": { "type": ["string", "null"] },
+        "paymentRequestUri": { "type": ["string", "null"] },
+        "statusLocal": { "enum": ["unpaid", "detected", "confirmed"] },
+        "statusBtcpayHint": { "type": "string" }
+      }
+    },
+    "preflight": {
+      "type": "object",
+      "required": ["ok", "checks"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "level", "message"],
+            "properties": {
+              "code": { "type": "string" },
+              "level": { "enum": ["ok", "warn", "bad"] },
+              "message": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

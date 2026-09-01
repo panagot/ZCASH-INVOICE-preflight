@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="About ZEC Invoice Preflight — scope, non-goals, privacy, and grant context." />
+    <title>About · ZEC Invoice Preflight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta, mountDocHero } from "/lib/site-chrome.js"
+      import { mountDocViz } from "/lib/doc-viz.js"
+      mountPageMeta({
+        title: "About · ZEC Invoice Preflight",
+        description: "Compose-time ZIP-321 preflight for Zcash merchants — scope, non-goals, and privacy.",
+        path: "/about.html",
+      })
+      mountSiteChrome({ page: "about", showBanner: false })
+      mountDocHero()
+      mountDocViz("about")
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <div id="doc-hero"></div>
+    <main id="main-content" class="doc-page">
+      <p class="doc-kicker">Project</p>
+      <h1>About ZEC Invoice Preflight</h1>
+      <p class="doc-lead">
+        Compose-time ZIP-321 validation for Zcash merchants. The thermal desk is the demo; the durable deliverable is
+        shared checks, fixtures, CLI doctor, and handoff schema v1 for BTCPay companion integration.
+      </p>
+
+      <div id="doc-viz"></div>
+
+      <section class="doc-section">
+        <h2>Naming</h2>
+        <p>
+          Public name and npm package: <code>zcash-invoice-preflight</code>. Handoff schema id (stable contract):
+          <code>btcpay-zec-helper.handoff/v1</code>.
+        </p>
+      </section>
+
+      <section class="doc-section">
+        <h2>In scope</h2>
+        <ul class="doc-list">
+          <li>Preflight module with stable fail codes</li>
+          <li>Fixture corpus + CLI doctor (exit 0 pass / 1 fail)</li>
+          <li>Handoff JSON v1 for BTCPay plugin authors</li>
+          <li>Deployed merchant desk + customer pay page (client-side)</li>
+        </ul>
+      </section>
+
+      <section class="doc-section">
+        <h2>Explicit non-goals</h2>
+        <ul class="doc-list">
+          <li>Live chain detection (mock status lane only)</li>
+          <li>BTCPay Server plugin merge in the current milestone</li>
+          <li>Lightwalletd / Zaino observatory dashboards</li>
+          <li>Exchange deposit monitoring</li>
+        </ul>
+      </section>
+
+      <section class="doc-section">
+        <h2>Privacy</h2>
+        <p>
+          The merchant desk runs in your browser. Invoice fields and session history use local storage only — no server
+          upload in this demo. The customer pay page reads a share token from the URL hash.
+        </p>
+      </section>
+
+      <section class="doc-section">
+        <h2>Links</h2>
+        <ul class="doc-list">
+          <li><a href="https://zcash-invoice-preflight.vercel.app/">Live demo</a></li>
+          <li><a href="https://github.com/panagot/ZCASH-INVOICE-preflight">GitHub</a></li>
+          <li><a href="/reviewers.html">Reviewer path</a></li>
+        </ul>
+      </section>
+
+      <p class="doc-actions">
+        <a class="btn cut" href="/reviewers.html">Reviewer path</a>
+        <a class="btn ghost" href="/">Merchant desk</a>
+      </p>
+    </main>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

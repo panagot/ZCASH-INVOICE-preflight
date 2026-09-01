@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Customer pay page — scan QR or open validated Zcash payment URI." />
+    <title>Customer · ZEC Invoice Preflight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/vendor/qrcode.min.js" defer></script>
+    <script type="module" src="/pay.js"></script>
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta } from "/lib/site-chrome.js"
+      mountPageMeta({
+        title: "Customer pay · ZEC Invoice Preflight",
+        description: "Scan QR or open a validated Zcash payment URI from the merchant desk.",
+        path: "/pay.html",
+      })
+      mountSiteChrome({ page: "pay", showBanner: false })
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <main id="main-content" class="chassis pay-shell">
+      <header class="mast mast-compact pay-mast">
+        <div class="mast-row">
+          <div class="mast-brand">
+            <span class="stamp">PAY</span>
+            <div class="mast-title-block">
+              <p class="mast-eyebrow">Customer ticket</p>
+              <h1 id="pay-heading">Pay</h1>
+            </div>
+          </div>
+        </div>
+        <p class="mast-sub pay-disclaimer" id="pay-sub">Scan QR or open the payment URI in your Zcash wallet.</p>
+      </header>
+
+      <div id="pay-empty" class="ticket-empty">
+        <p>NO TICKET</p>
+        <span id="pay-empty-msg">Build one on the <a href="/">merchant desk</a>.</span>
+        <div class="pay-demo">
+          Or load a demo PASS ticket from the reviewer sample.
+          <button type="button" class="btn ghost" id="pay-demo">Load demo ticket</button>
+        </div>
+      </div>
+
+      <article id="pay-body" class="ticket ticket-pass hidden" aria-live="polite">
+        <div class="perf" aria-hidden="true"></div>
+        <div class="ticket-body">
+        <header class="ticket-head">
+          <p class="shop" id="fact-label">PAYMENT</p>
+          <p class="verdict neutral" id="fact-status">SCAN TO PAY</p>
+        </header>
+        <div id="pay-check-viz"></div>
+        <div class="qr-paper">
+          <canvas id="qr" width="200" height="200" aria-label="Payment QR"></canvas>
+        </div>
+        <dl class="ticket-facts">
+          <div><dt>ZEC</dt><dd id="fact-amount">—</dd></div>
+          <div><dt>ORDER</dt><dd id="fact-order">—</dd></div>
+          <div><dt>NET</dt><dd id="fact-network">—</dd></div>
+          <div><dt>FIAT</dt><dd id="fact-fiat">—</dd></div>
+        </dl>
+        <p class="ticket-msg" id="fact-message"></p>
+        <label class="uri-block">
+          <span>URI</span>
+          <textarea id="uri" rows="3" readonly></textarea>
+        </label>
+        <div class="ticket-actions">
+          <button type="button" class="btn ink" id="copy-uri">Copy URI</button>
+          <a class="btn ink hidden" id="wallet-link" href="#" aria-disabled="true">Open in wallet</a>
+        </div>
+        </div>
+        <div class="perf bottom" aria-hidden="true"></div>
+      </article>
+    </main>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

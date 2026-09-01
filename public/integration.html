@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="BTCPay companion integration — handoff JSON schema, ownership boundaries, and detection adapter seam."
+    />
+    <title>BTCPay · ZEC Invoice Preflight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta, mountDocPager, mountDocHero } from "/lib/site-chrome.js"
+      import { mountDocViz } from "/lib/doc-viz.js"
+      mountPageMeta({
+        title: "BTCPay · ZEC Invoice Preflight",
+        description: "BTCPay companion integration — handoff JSON schema, ownership boundaries, detection adapter seam.",
+        path: "/integration.html",
+      })
+      mountSiteChrome({ page: "integration", showBanner: false })
+      mountDocHero()
+      mountDocViz("integration")
+      mountDocPager("integration")
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <div id="doc-hero"></div>
+
+    <main id="main-content" class="doc-page">
+      <p class="doc-kicker">Companion tool</p>
+      <h1>BTCPay integration</h1>
+      <p class="doc-lead">
+        This project is a <strong>BTCPay companion</strong>, not a checkout replacement. It owns compose-time preflight;
+        BTCPay Zcash plugin + backend own invoice creation, settlement, and payment detection.
+      </p>
+
+      <div id="doc-viz"></div>
+
+      <section class="doc-section">
+        <h2>Ownership boundary</h2>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Concern</th>
+                <th>Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Memo + transparent, amount, network, URI round-trip</td>
+                <td><strong>This preflight tool</strong></td>
+              </tr>
+              <tr>
+                <td>Create BTCPay invoice, detect payment, confirm settlement</td>
+                <td><strong>BTCPay Zcash plugin + zkool / lightwalletd</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="doc-section">
+        <h2>Handoff export</h2>
+        <p>
+          Handoff v1 exports JSON with schema id <code>btcpay-zec-helper.handoff/v1</code> (legacy stable id; npm package is <code>zcash-invoice-preflight</code>).
+        </p>
+        <ul class="doc-list">
+          <li><code>preflight.checks[]</code> — same codes as CLI doctor</li>
+          <li><code>invoice.paymentRequestUri</code> — validated ZIP-321 string</li>
+          <li><code>invoice.btcpayInvoiceId</code> — <code>null</code> until plugin creates a real invoice</li>
+          <li><code>disclaimer</code> + <code>ownership</code> — no fake settlement claims</li>
+        </ul>
+        <p>
+          Full schema:
+          <a href="https://github.com/panagot/ZCASH-INVOICE-preflight/blob/main/schemas/handoff-v1.json" target="_blank" rel="noopener noreferrer"
+            >handoff-v1.json on GitHub</a
+          >
+        </p>
+      </section>
+
+      <section class="doc-section">
+        <h2>Detection adapter seam</h2>
+        <p>
+          The status lane on the desk uses <code>MockDetectionAdapter</code> by default. A
+          <code>ZkoolDetectionAdapter</code> stub documents where real chain watching would plug in — out of scope for
+          this demo, explicitly labeled in the UI.
+        </p>
+      </section>
+
+      <section class="doc-section">
+        <h2>Importable modules</h2>
+        <p>Plugin authors can reuse checks without the POS UI:</p>
+        <pre class="doc-code"><code>import { preflightInvoice } from "zcash-invoice-preflight/preflight"
+import { toBtcpayHandoff } from "zcash-invoice-preflight/handoff"
+import { ensureAddressEngine } from "zcash-invoice-preflight/address"
+
+await ensureAddressEngine()
+const report = preflightInvoice({ address, amount, memo, network: "mainnet" })
+const handoff = toBtcpayHandoff({
+  id: "inv_demo",
+  network: "mainnet",
+  address,
+  amount: report.payment?.amount,
+  uri: report.uri,
+  status: "unpaid",
+  preflight: { ok: report.ok, checks: report.checks },
+  meta: { chainWatch: false },
+})</code></pre>
+      </section>
+
+      <section class="doc-section doc-callout">
+        <h2>For maintainers</h2>
+        <p>
+          For BTCPay Zcash maintainers: versioned handoff JSON lets the plugin reuse the same preflight fail codes as
+          the merchant desk. Compare these codes with what your stack enforces at invoice creation.
+        </p>
+        <p class="doc-actions">
+          <a class="btn cut" href="/">Export handoff on desk</a>
+          <a
+            class="btn ghost"
+            href="https://github.com/panagot/ZCASH-INVOICE-preflight/blob/main/docs/REVIEWER.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Reviewer guide</a
+          >
+        </p>
+      </section>
+    </main>
+
+    <div id="doc-pager" class="doc-pager"></div>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

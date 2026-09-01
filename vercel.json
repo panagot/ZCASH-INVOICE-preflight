@@ -1,0 +1,14 @@
+{
+  "rewrites": [{ "source": "/(.*)", "destination": "/$1" }],
+  "headers": [
+    {
+      "source": "/(.*)\\.wasm",
+      "headers": [{ "key": "Content-Type", "value": "application/wasm" }]
+    },
+    {
+      "source": "/vendor/zaddr/(.*).wasm",
+      "headers": [{ "key": "Content-Type", "value": "application/wasm" }]
+    }
+  ],
+  "routes": [{ "handle": "filesystem" }, { "src": "/.*", "status": 404, "dest": "/404.html" }]
+}

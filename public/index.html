@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Merchant desk for Zcash invoice preflight — ZIP-321 validation, thermal ticket, BTCPay handoff export."
+    />
+    <title>Desk · ZEC Invoice Preflight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/vendor/qrcode.min.js" defer></script>
+    <script type="module" src="/app.js"></script>
+    <script type="module">
+      import { mountSiteChrome, mountPageMeta } from "/lib/site-chrome.js"
+      mountPageMeta({
+        title: "Merchant desk · ZEC Invoice Preflight",
+        description: "Compose and validate Zcash ZIP-321 payment requests before customers pay.",
+        path: "/",
+      })
+      mountSiteChrome({ page: "desk" })
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="site-nav" class="site-nav-wrap"></header>
+    <div class="desk">
+      <aside class="roll" aria-label="Session tickets">
+        <p class="roll-label">ROLL</p>
+        <ol id="history" class="roll-list"></ol>
+        <button type="button" class="roll-clear" id="clear-history">Clear roll</button>
+      </aside>
+
+      <main id="main-content" class="chassis">
+        <header class="mast mast-compact">
+          <div class="mast-row">
+            <div class="mast-brand">
+              <span class="stamp">ZEC</span>
+              <div class="mast-title-block">
+                <p class="mast-eyebrow">Invoice / preflight</p>
+                <h1>Ticket</h1>
+              </div>
+            </div>
+            <nav class="mode" aria-label="Desk mode">
+              <button type="button" class="mode-btn active" data-mode="build" aria-pressed="true">Compose</button>
+              <button type="button" class="mode-btn" data-mode="parse" aria-pressed="false">Parse URI</button>
+            </nav>
+          </div>
+
+          <p class="mast-sub">
+            Catch errors before the customer scans a QR.
+            <a href="/why.html">Why</a> · <a href="/how.html">How</a>
+          </p>
+
+          <div class="mast-toolbar">
+            <div class="mast-chips" aria-label="Reviewer shortcuts">
+              <a class="mast-chip" href="/reviewers.html">Reviewer</a>
+              <button type="button" class="mast-chip pass" data-sample="good">Good UA</button>
+              <button type="button" class="mast-chip fail" data-sample="bad">Bad t+memo</button>
+            </div>
+            <div class="mast-meta">
+              <span class="status-pill" id="engine-line">Engine · loading…</span>
+              <span class="status-pill mock" id="adapter-line">Detect · mock</span>
+              <span class="mast-hint" title="Ctrl+Enter runs preflight from any form field">Ctrl+↵</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="work">
+          <section class="controls" id="panel-build">
+            <h2>Compose invoice</h2>
+            <form id="invoice-form" class="form" autocomplete="off">
+              <div class="row-2">
+                <label>
+                  <span>Network</span>
+                  <select id="network">
+                    <option value="mainnet">MAINNET</option>
+                    <option value="testnet">TESTNET</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Order id</span>
+                  <input id="orderId" placeholder="INV-1042" />
+                </label>
+              </div>
+              <label>
+                <span>Receive address</span>
+                <input id="address" spellcheck="false" required placeholder="u1… / zs1… / t1…" />
+              </label>
+              <div class="row-2">
+                <label>
+                  <span>Amount ZEC</span>
+                  <input id="amount" inputmode="decimal" required placeholder="0.05" />
+                </label>
+                <label>
+                  <span>Fiat note <em>(optional)</em></span>
+                  <input id="fiat" placeholder="e.g. ~12 USD — manual" />
+                </label>
+              </div>
+              <label>
+                <span>Memo <em>shielded only</em></span>
+                <input id="memo" maxlength="512" placeholder="Order #1042" />
+              </label>
+              <div class="row-2">
+                <label>
+                  <span>Label</span>
+                  <input id="label" placeholder="Cafe North" />
+                </label>
+                <label>
+                  <span>Message</span>
+                  <input id="message" placeholder="Table 4" />
+                </label>
+              </div>
+              <div class="actions">
+                <button type="submit" class="btn cut">Run preflight</button>
+                <button type="button" class="btn ghost" id="load-sample">Good UA</button>
+                <button type="button" class="btn ghost" id="load-bad">Bad t+memo</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="controls hidden" id="panel-parse">
+            <h2>Parse existing URI</h2>
+            <form id="parse-form" class="form">
+              <label>
+                <span>zcash: request</span>
+                <textarea id="parse-uri" rows="5" placeholder="zcash:u1...?amount=…"></textarea>
+              </label>
+              <div class="actions">
+                <button type="submit" class="btn cut">Run preflight</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="ticket-bay" aria-live="polite" aria-describedby="desk-error">
+            <div id="ticket-empty" class="ticket-empty">
+              <p>NO TICKET</p>
+              <span>Run preflight to print a thermal slip.</span>
+            </div>
+
+            <article id="ticket" class="ticket hidden">
+              <div class="perf" aria-hidden="true"></div>
+              <div class="ticket-body">
+              <header class="ticket-head">
+                <p class="shop" id="ticket-label">MERCHANT</p>
+                <p class="verdict" id="verdict">—</p>
+              </header>
+              <p class="ticket-id" id="ticket-id"></p>
+              <div class="qr-paper">
+                <canvas id="qr" width="180" height="180" aria-label="Payment QR"></canvas>
+              </div>
+              <dl class="ticket-facts">
+                <div><dt>ZEC</dt><dd id="ticket-amount">—</dd></div>
+                <div><dt>FIAT</dt><dd id="ticket-fiat">—</dd></div>
+                <div><dt>NET</dt><dd id="ticket-net">—</dd></div>
+                <div><dt>ORDER</dt><dd id="ticket-order">—</dd></div>
+              </dl>
+              <p class="ticket-msg" id="ticket-msg"></p>
+              <label class="uri-block">
+                <span>URI</span>
+                <textarea id="uri" rows="3" readonly></textarea>
+              </label>
+              <ul id="checklist" class="checks"></ul>
+              <div class="ticket-actions">
+                <div class="ticket-actions-primary">
+                  <button type="button" class="btn ink" id="copy-uri">Copy URI</button>
+                  <button type="button" class="btn ink" id="open-pay">Customer page</button>
+                  <button type="button" class="btn ink" id="print-ticket">Print</button>
+                </div>
+                <div class="ticket-actions-secondary">
+                  <button type="button" class="btn ink" id="copy-share">Share link</button>
+                  <button type="button" class="btn ink" id="export-json">Export invoice JSON</button>
+                  <button type="button" class="btn ink" id="export-handoff">Export BTCPay handoff</button>
+                </div>
+              </div>
+              </div>
+              <div class="perf bottom" aria-hidden="true"></div>
+            </article>
+          </section>
+        </div>
+
+        <section class="desk-bottom" aria-label="Session insights and mock lane">
+          <div class="stats-bay" id="session-stats" aria-label="Session telemetry from local roll"></div>
+
+          <section class="lane-bay" aria-label="Mock payment status lane">
+            <div class="lane-head">
+              <h2>Lane <span class="mock">MOCK</span></h2>
+              <p>Local demo — not on-chain detection.</p>
+            </div>
+            <ol class="lane lane-compact" id="status-track" aria-label="Mock payment progress">
+              <li data-state="unpaid" class="active"><b>01</b><span>UNPAID</span></li>
+              <li data-state="detected"><b>02</b><span>DETECTED</span></li>
+              <li data-state="confirmed"><b>03</b><span>CONFIRMED</span></li>
+            </ol>
+            <div class="lane-actions">
+              <button type="button" class="btn ghost sm" id="status-reset" disabled>Reset</button>
+              <button type="button" class="btn cut sm" id="status-next" disabled>Advance</button>
+            </div>
+            <ol id="status-log" class="log log-compact"></ol>
+          </section>
+        </section>
+
+      </main>
+    </div>
+    <footer id="site-footer" class="site-footer-wrap"></footer>
+  </body>
+</html>

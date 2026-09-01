@@ -1,0 +1,66 @@
+{
+  "capturedAt": "2026-09-01T13:06:24.511Z",
+  "base": "http://localhost:5177",
+  "pages": [
+    {
+      "slug": "01-desk-empty",
+      "url": "http://localhost:5177/",
+      "file": "01-desk-empty.png"
+    },
+    {
+      "slug": "02-desk-pass",
+      "url": "http://localhost:5177/",
+      "file": "02-desk-pass.png"
+    },
+    {
+      "slug": "03-desk-fail",
+      "url": "http://localhost:5177/",
+      "file": "03-desk-fail.png"
+    },
+    {
+      "slug": "04-why",
+      "url": "http://localhost:5177/why.html",
+      "file": "04-why.png"
+    },
+    {
+      "slug": "05-how",
+      "url": "http://localhost:5177/how.html",
+      "file": "05-how.png"
+    },
+    {
+      "slug": "06-checks",
+      "url": "http://localhost:5177/checks.html",
+      "file": "06-checks.png"
+    },
+    {
+      "slug": "07-integration",
+      "url": "http://localhost:5177/integration.html",
+      "file": "07-integration.png"
+    },
+    {
+      "slug": "08-reviewers",
+      "url": "http://localhost:5177/reviewers.html",
+      "file": "08-reviewers.png"
+    },
+    {
+      "slug": "09-pay-empty",
+      "url": "http://localhost:5177/pay.html",
+      "file": "09-pay-empty.png"
+    },
+    {
+      "slug": "10-pay-demo",
+      "url": "http://localhost:5177/pay.html",
+      "file": "10-pay-demo.png"
+    },
+    {
+      "slug": "11-about",
+      "url": "http://localhost:5177/about.html",
+      "file": "11-about.png"
+    },
+    {
+      "slug": "12-404",
+      "url": "http://localhost:5177/does-not-exist-page",
+      "file": "12-404.png"
+    }
+  ]
+}

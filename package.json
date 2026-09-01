@@ -1,0 +1,42 @@
+{
+  "name": "zcash-invoice-preflight",
+  "private": false,
+  "version": "0.4.1",
+  "license": "MIT",
+  "type": "module",
+  "description": "Compose-time ZIP-321 preflight for Zcash merchants — BTCPay companion (handoff JSON + doctor/CI)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panagot/ZCASH-INVOICE-preflight.git"
+  },
+  "homepage": "https://github.com/panagot/ZCASH-INVOICE-preflight#readme",
+  "bugs": {
+    "url": "https://github.com/panagot/ZCASH-INVOICE-preflight/issues"
+  },
+  "exports": {
+    "./preflight": "./public/lib/preflight.js",
+    "./zip321": "./public/lib/zip321.js",
+    "./address": "./public/lib/address.js",
+    "./handoff": "./public/lib/btcpay-handoff.js",
+    "./detection": "./public/lib/detection.js"
+  },
+  "scripts": {
+    "vendor": "node scripts/vendor-libs.mjs",
+    "postinstall": "node scripts/vendor-libs.mjs",
+    "dev": "npm run vendor && npx --yes serve public -p 5177",
+    "start": "npx --yes serve public -p 5177",
+    "test": "node --test test/*.test.js",
+    "doctor": "node bin/doctor.js",
+    "screenshots": "node scripts/capture-screenshots.mjs"
+  },
+  "bin": {
+    "btcpay-zec-doctor": "./bin/doctor.js"
+  },
+  "dependencies": {
+    "@elemental-zcash/zaddr_wasm_parser": "0.2.0",
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
